@@ -107,12 +107,13 @@ const App = () => {
 
       <div className="flex flex-col text-black bg-slate-300">
         <h1 className="text-3xl font-mono font-bold animate-pulse text-center m-2">
-          Django-Rest-Framework
+          Django-Rest-Framework x React
         </h1>
-        <div className="paypalButtons"></div>
 
         <Productos />
+        <div className="flex flex-col justify-center items-center h-screen">
         <LoginRegister />
+        </div>
       </div>
     </>
   );
