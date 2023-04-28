@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthContext from "../Context/AuthContext";
 import { useContext, useEffect } from "react";
 import LoginRegister from "./LoginRegister";
@@ -19,19 +19,19 @@ const App = () => {
     showCart()
   })
 
-  var price= 0
-  const data = cart.map((item, index) => (
-    <>
-    <ol key={index}>
-      <li>{item.producto}</li>
-      <li>{item.cantidad}</li>
-    </ol>
-    </>
+  var [precio_total, setPrecio_total]= useState(0)
+  const data = cart.map((item) => (
+    <tr key={item.cid}>
+      <td>{item.nombre}</td>
+      <td>{item.cantidad}</td>
+      <td>{item.precio_total}</td>
+      {/* setPrecio_total(precio_total += parseInt(item.precio_total)) */}
+    </tr>
   ));
 
   return (
     <>
-      <div className="navbar text-white p-2">
+      <div className="navbar text-black bg-slate-200 p-2">
         <div className="navbar-start">
           {user_username ? (
             <button
@@ -70,14 +70,25 @@ const App = () => {
                 className="modal-toggle"
               />
               <div className="modal">
-                <div className="modal-box w-11/12 max-w-5xl">
-                  <h1>Cart</h1>
-                  <div className="">{data}</div>
+                <div className="modal-box w-11/12 max-w-5xl bg-slate-300 text-black">
+                  <h1 className="text-2xl font-mono font-bold self-center">Mi Carrito</h1>
+                  <table className="table w-full text-white bg-black">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data}
+                    </tbody>
+                  </table>
                   <div className="moda-action">
-                    <label htmlFor="modal-cart" className="btn">
+                    <label htmlFor="modal-cart" className="btn text-white">
                       Salir
                     </label>
-                    <button className="btn btn-accent m-2">Q{price} Pagar</button>
+                    <button className="btn btn-accent m-2 text-white">Q{precio_total} Pagar</button>
                   </div>
                 </div>
               </div>
@@ -94,9 +105,9 @@ const App = () => {
         </div>
       </div>
 
-      <div className="flex flex-col text-white">
-        <h1 className="text-3xl font-mono font-bold animate-pulse text-center">
-          Dango-Rest-Framework
+      <div className="flex flex-col text-black bg-slate-300">
+        <h1 className="text-3xl font-mono font-bold animate-pulse text-center m-2">
+          Django-Rest-Framework
         </h1>
         <div className="paypalButtons"></div>
 

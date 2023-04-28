@@ -2,6 +2,7 @@ import React from "react";
 import { useContext, useState, useEffect } from "react";
 import AuthContext from "../Context/AuthContext";
 import logo from  '../assets/react.svg';
+import Swal from "sweetalert2";
 
 function Productos() {
   const { token, url } = useContext(AuthContext);
@@ -22,18 +23,27 @@ function Productos() {
     }
   }
 
+  const agregar = () => {
+    Swal.fire({
+      icon: 'success',
+      text: 'Producto agregado',
+      showConfirmButton: false,
+      timer: 1000
+    })
+  }
+
   useEffect(() => {
     products();
   });
 
-  const pro = data.map((item, index) => (
-    <div className="card  bg-white shadow-xl text-black m-2" key={index}>
+  const pro = data.map((item) => (
+    <div className="card  bg-white shadow-xl text-black m-2" key={item.pid}>
       <figure><img src={logo} alt="image_product" /></figure>
       <div className="card-body">
         <h2 className="card-title">{item.nombre}</h2>
         <p>{item.descripcion}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">Q{item.precio} Comprar</button>
+          <button className="btn btn-primary" onClick={agregar}>Q{item.precio} Comprar</button>
         </div>
       </div>
     </div>
