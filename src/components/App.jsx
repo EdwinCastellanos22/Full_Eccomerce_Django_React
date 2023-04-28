@@ -78,6 +78,7 @@ const App = () => {
                       Salir
                     </label>
                     <button className="btn btn-accent m-2">Q{price} Pagar</button>
+                    <button className='btn'>Hola</button>
                   </div>
                 </div>
               </div>
