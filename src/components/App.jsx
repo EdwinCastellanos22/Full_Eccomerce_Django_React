@@ -31,15 +31,17 @@ const App = () => {
 
   return (
     <>
-      <div className="navbar text-black bg-slate-200 p-2">
+      <div className={token ? "navbar text-black bg-slate-200 p-2" : "hidden"}>
         <div className="navbar-start">
           {user_username ? (
+            <>
             <button
               className="btn-ghost text-xl m-2 shadow-sm"
               style={{ textTransform: "uppercase" }}
             >
               {user_username}
             </button>
+            </>
           ) : null}
         </div>
 
@@ -105,13 +107,13 @@ const App = () => {
         </div>
       </div>
 
-      <div className="flex flex-col text-black bg-slate-300">
+      <div className="flex flex-col text-black bg-slate-300 max-[400px]:w-screen">
         <h1 className="text-3xl font-mono font-bold animate-pulse text-center m-2">
           Django-Rest-Framework x React
         </h1>
 
         <Productos />
-        <div className="flex flex-col justify-center items-center h-screen">
+        <div className={token ? "flex flex-col":"flex flex-col justify-center items-center h-screen"}id="token_login">
         <LoginRegister />
         </div>
       </div>
