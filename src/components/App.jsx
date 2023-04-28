@@ -88,7 +88,7 @@ const App = () => {
                     <label htmlFor="modal-cart" className="btn text-white">
                       Salir
                     </label>
-                    <button className="btn btn-accent m-2 text-white">Q{precio_total} Pagar</button>
+                    <button className="btn btn-accent m-2">Q{precio_total} Pagar</button>
                   </div>
                 </div>
               </div>
