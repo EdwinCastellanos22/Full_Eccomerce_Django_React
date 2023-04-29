@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 import LoginRegister from "./LoginRegister";
 import Productos from "./Productos";
 const App = () => {
-  const { logout, user, token, url, getCart, cart, paypal } = useContext(AuthContext);
+  const { logout, user, token, getCart, cart, paypal} = useContext(AuthContext);
 
   var user_username = "";
   user ? (user_username = user.username) : null;
@@ -19,15 +19,14 @@ const App = () => {
     showCart()
   })
 
-  var [precio_total, setPrecio_total]= useState(0)
+
   const data = cart.map((item) => (
     <tr key={item.cid}>
-      <td>{item.nombre}</td>
       <td>{item.cantidad}</td>
       <td>{item.precio_total}</td>
-      {/* setPrecio_total(precio_total += parseInt(item.precio_total)) */}
     </tr>
   ));
+
 
   return (
     <>
@@ -90,7 +89,7 @@ const App = () => {
                     <label htmlFor="modal-cart" className="btn text-white">
                       Salir
                     </label>
-                    <button className="btn btn-accent m-2">Q{precio_total} Pagar</button>
+                    <button className="btn btn-accent m-2">Q0 Pagar</button>
                   </div>
                 </div>
               </div>

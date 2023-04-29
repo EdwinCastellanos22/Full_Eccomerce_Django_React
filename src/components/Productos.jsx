@@ -37,13 +37,13 @@ function Productos() {
   });
 
   const pro = data.map((item) => (
-    <div className="card  bg-white shadow-xl text-black m-2 max-[400px]:bg-black max-[400px]:text-white max-[400px]:w-32" key={item.pid}>
+    <div className="card  bg-white shadow-xl text-black m-3 max-[400px]:bg-black max-[400px]:text-white max-[400px]:w-32" key={item.pid}>
       <figure><img src={logo} alt="image_product" /></figure>
       <div className="card-body">
         <h2 className="card-title">{item.nombre}</h2>
         <p>{item.descripcion}</p>
         <div className="card-actions justify-end max-[400px]:justify-center">
-          <button className="btn btn-primary" onClick={agregar}>Q{item.precio} Comprar</button>
+          <button className="btn btn-primary" onClick={agregar}>Q{item.precio} Agregar</button>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@ function Productos() {
     <>
       {token ? (
         <>
-          <div className="grid grid-cols-3  max-[400px]:grid-cols-2 w-screen m-2">{pro}</div>
+          <div className="grid grid-cols-3  max-[400px]:grid-cols-2 w-screen">{pro}</div>
           <div className="flex flex-row w-screen items-center justify-center">
             <div className="btn-group grid grid-cols-2 w-96">
               <button className="btn btn-outline">Previous page</button>
