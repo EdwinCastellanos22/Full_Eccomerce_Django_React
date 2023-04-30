@@ -11,9 +11,10 @@ export default AuthContext;
 
 export const AuthProvider = ({ Children }) => {
   const [loading, setLoading] = useState(true);
-  const url= 'https://pempi22.pythonanywhere.com/';
+  const url = "https://pempi22.pythonanywhere.com/";
 
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState([]);
+  const [cartName, setCartName]= useState([])
 
   const [token, setToken] = useState(() =>
     localStorage.getItem("token")
@@ -40,7 +41,7 @@ export const AuthProvider = ({ Children }) => {
   };
 
   const loginUser = async (username, password) => {
-    const response = await fetch(url+"api/token/", {
+    const response = await fetch(url + "api/token/", {
       method: "POST",
       headers: {
         Accept: "*/*",
@@ -62,7 +63,7 @@ export const AuthProvider = ({ Children }) => {
       Swal.fire({
         icon: "success",
         title: "Hola",
-        text: "Bienvinido",
+        text: "Bienvenido",
         timer: 2000,
         showConfirmButton: false,
       });
@@ -71,9 +72,9 @@ export const AuthProvider = ({ Children }) => {
     }
   };
 
-  const registerUser= async (username, password, password2, email) => {
-    const response= await fetch(url+'api/register/', {
-      method: 'POST',
+  const registerUser = async (username, password, password2, email) => {
+    const response = await fetch(url + "api/register/", {
+      method: "POST",
       headers: {
         Accept: "*/*",
         "Content-Type": "application/json",
@@ -82,11 +83,11 @@ export const AuthProvider = ({ Children }) => {
         username: username,
         password: password,
         password2: password2,
-        email: email
-      })
-    })
-    const data= await response.json()
-    if (response.status === 201){
+        email: email,
+      }),
+    });
+    const data = await response.json();
+    if (response.status === 201) {
       Swal.fire({
         icon: "success",
         title: "Hecho",
@@ -94,7 +95,7 @@ export const AuthProvider = ({ Children }) => {
         timer: 2000,
         showConfirmButton: false,
       });
-    }else{
+    } else {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -106,7 +107,7 @@ export const AuthProvider = ({ Children }) => {
       console.log(data);
       console.log(password);
     }
-  }
+  };
 
   const logout = () => {
     const token = localStorage.getItem("token");
@@ -179,8 +180,9 @@ export const AuthProvider = ({ Children }) => {
   };
 
   const viewToken = () => {
-    token
-    2  ? Swal.fire({
+    token;
+    2
+      ? Swal.fire({
           icon: "info",
           title: "Token JWT",
           text: token,
@@ -195,48 +197,50 @@ export const AuthProvider = ({ Children }) => {
         });
   };
 
-  const verifyToken= async() => {
-    const response = await fetch(url+'api/token/verify/', {
+  const verifyToken = async () => {
+    const response = await fetch(url + "api/token/verify/", {
       method: "POST",
-      headers:{
+      headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        token: localStorage.getItem('token')
-      })
-    })
-    if (response.status == 200){
+        token: localStorage.getItem("token"),
+      }),
+    });
+    if (response.status == 200) {
       Swal.fire({
-        icon: 'success',
-        title: 'Valido',
+        icon: "success",
+        title: "Valido",
         text: "El token es valido",
         showConfirmButton: false,
-        timer: 2000
-    })
-    }else{
+        timer: 2000,
+      });
+    } else {
       Swal.fire({
-        icon: 'warning',
-        title: 'No Valido',
+        icon: "warning",
+        title: "No Valido",
         text: "El token ha vencido",
         showConfirmButton: false,
-        timer: 2000
-    })
+        timer: 2000,
+      });
     }
-  }
+  };
 
-  const getCart= async() => {
-    const response= await fetch(url+'api/car/', {
-      method: 'GET',
+  const getCart = async () => {
+    const response = await fetch(url + "api/car/", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: token,
-      }
-    })
-    const data= await response.json()
-    response.status == 200 ? 
-      await setCart(data)  : 
-      console.log("Error")
-  }
+      },
+    });
+    const data = await response.json();
+    if (response.status == 200) {
+      await setCart(data);
+    } else {
+      console.log("Error");
+    }
+  };
 
   const contextData = {
     user,
@@ -254,6 +258,7 @@ export const AuthProvider = ({ Children }) => {
     verifyToken,
     getCart,
     cart,
+    cartName,
   };
 
   useEffect(() => {

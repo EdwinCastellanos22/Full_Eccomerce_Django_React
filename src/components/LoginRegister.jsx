@@ -43,7 +43,7 @@ export default function LoginRegister() {
             <strong>Inicia sesion</strong> o <strong>registrate</strong>
           </h3>
 
-          <div className="grid grid-cols-2">
+          <div className="flex flex-shrink-0 justify-center">
             {/* Modal Login */}
             <label htmlFor="login" className="btn btn-success m-10 text-black">
               Login
