@@ -242,6 +242,63 @@ export const AuthProvider = ({ Children }) => {
     }
   };
 
+  // Agregar Producto al Carrito
+  const add_product = async  (pid) => {
+    const response= await fetch(url +"api/car/", {
+      method: "POST",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "pid":pid
+      })
+    });
+    response.status == 201 ?
+    Swal.fire({
+      icon: "success",
+      text: `Producto agregado!!`,
+      showConfirmButton: false,
+      timer: 1000,
+    })
+    : 
+    Swal.fire({
+      icon: "error",
+      text: `Ha ocurrido un error!!`,
+      showConfirmButton: false,
+      timer: 1000,
+    })
+  };
+
+  // Eliminar Producto
+  const delete_product= async(cid) =>{
+    const response= await fetch(url+"api/car/", {
+      method: "DELETE",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "cid": cid
+      })
+    })
+    response.status == 204 ? 
+    Swal.fire({
+      icon: "success",
+      title: "Eliminado",
+      text: "Se ha eliminado el producto!!",
+      showConfirmButton: false,
+      timer: 2000,
+    }):
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Error!!",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  }
+
   const contextData = {
     user,
     setUser,
@@ -259,6 +316,8 @@ export const AuthProvider = ({ Children }) => {
     getCart,
     cart,
     cartName,
+    add_product,
+    delete_product,
   };
 
   useEffect(() => {

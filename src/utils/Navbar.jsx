@@ -4,10 +4,11 @@ import AuthContext from "../Context/AuthContext";
 import { useContext, useEffect } from "react";
 import {FaUserAlt} from 'react-icons/fa';
 import {FiLogOut} from 'react-icons/fi';
+import {FiDelete} from "react-icons/fi"
 
 function Navbar() {
 
-  const { logout, user, token, getCart, cart, cartName} = useContext(AuthContext);
+  const { logout, user, token, getCart, cart, delete_product} = useContext(AuthContext);
 
   var user_username = "";
   user ? (user_username = user.username) : null;
@@ -26,9 +27,11 @@ function Navbar() {
 
   const data = cart.map((item) => (
     <tr key={item.cid}>
-      <td><a href={`#${item.producto}`} className="link-accent">{item.producto}</a></td>
+      <td>{item.producto.nombre}</td>
+      <td>{item.producto.precio}</td>
       <td>{item.cantidad}</td>
       <td>{item.precio_total}</td>
+      <td><FiDelete onClick={delete_product.bind(this, item.cid)}/></td>
     </tr>
   ));
 
@@ -79,9 +82,11 @@ function Navbar() {
                   <table className="table w-full text-white bg-black">
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Precio Total</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
