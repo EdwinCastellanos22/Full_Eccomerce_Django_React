@@ -4,39 +4,40 @@ import AuthContext from "../Context/AuthContext";
 
 function Productos() {
   const { token, url, add_product } = useContext(AuthContext);
+
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [next, setNext]= useState(null)
+  const [prev, setPrev]= useState(null)
   const [data, setData] = useState([]);
-  const [next, setNext] = useState("");
-  const [prev, setprev] = useState("");
-  const [urls, setUrls] = useState(url + "api/products/");
-
-  const irNext = () => {
-    setUrls(next);
-  };
-
-  const irPrev = () => {
-    setUrls(prev);
-  };
-
-  async function products() {
-    if (token) {
-      const response = await fetch(urls, {
-        method: "GET",
-        headers: {
-          Authorization: token,
-        },
-      });
-      const da = await response.json();
-      setData(da.results);
-      await da.next != null ? setNext(da.next) : null;
-      await da.previous != null ? setprev(da.previous) : null;
-    } else {
-      null;
-    }
-  }
 
   useEffect(() => {
-    products();
-  });
+    if(loading){
+      fetch(url+'api/products/?page='+page,{
+        method: "GET",
+        headers: {
+          Authorization: token
+        }
+      })
+      .then((response)=> response.json())
+      .then((data) =>{
+        setData(data.results)
+        data.next != '' ? setNext(data.next) : setNext(null)
+        data.previous != '' ? setPrev(data.previous) : setNext(null)
+        setLoading(false)
+      })
+      .catch((error)=>console.log(error))
+    }
+  }),[loading];
+
+  const irNext = () => {
+    setPage(page +1)
+    setLoading(true)
+  }
+  const irPrev = () => {
+    setPage(page -1)
+    setLoading(true)
+  }
 
   const pro = data.map((item) => (
     <div
@@ -48,7 +49,7 @@ function Productos() {
         <img
           src={"https://picsum.photos/id/" + item.pid + "/300/300"}
           alt="image_product"
-          className="rounded mt-2"
+          className="rounded"
         />
       </figure>
       <div className="card-body">
@@ -66,31 +67,33 @@ function Productos() {
     </div>
   ));
 
-  return (
-    <>
-      {token ? (
-        <>
-          <div className="grid grid-cols-3  max-[400px]:grid-cols-2 w-screen">
-            {pro}
-          </div>
-          <div className="flex flex-row w-screen items-center justify-center">
-            <div className="btn-group grid grid-cols-2 w-96">
-              {prev != "" ? (
-                <button className="btn btn-outline" onClick={irPrev}>
-                  Previous page
-                </button>
-              ) : null}
-              {next != "" ? (
-                <button className="btn btn-outline" onClick={irNext}>
-                  Next
-                </button>
-              ) : null}
+  if (loading) {
+    return (
+    <div className="flex flex-col h-screen justify-center items-center">
+      <button className="btn loading">loading</button>
+    </div>
+    )
+  } else {
+    return (
+      <>
+        {token ? (
+          <>
+            <div
+              className="grid grid-cols-3  max-[400px]:grid-cols-2 w-screen">
+              {pro}
             </div>
-          </div>
-        </>
-      ) : null}
-    </>
-  );
+            <div className="flex flex-row w-screen items-center justify-center">
+              <div className="btn-group">
+                {prev != null ? <button className="btn mr-2" onClick={irPrev}>prev</button> : null}
+                <button className="btn btn-ghost">{page}</button>
+                {next != null ? <button className="btn ml-2" onClick={irNext}>next</button> : null}
+              </div>
+            </div>
+          </>
+        ) : null}
+      </>
+    );
+  }
 }
 
 export default Productos;
