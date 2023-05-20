@@ -2,8 +2,6 @@ import React, { Children } from "react";
 import { useState, useEffect } from "react";
 import { createContext } from "react";
 import Swal from "sweetalert2";
-import axios from "axios";
-import { loadScript } from "@paypal/paypal-js";
 import jwtdecode from "jwt-decode";
 
 const AuthContext = createContext();
@@ -15,6 +13,8 @@ export const AuthProvider = ({ Children }) => {
 
   const [cart, setCart] = useState([]);
   const [cartName, setCartName]= useState([])
+
+  const [pagototal, setPagototal]= useState(0)
 
   const [token, setToken] = useState(() =>
     localStorage.getItem("token")
@@ -133,52 +133,6 @@ export const AuthProvider = ({ Children }) => {
         });
   };
 
-  const paypal = () => {
-    const userID =
-      "AVwDIRtg-Io9_mJ7wJs-HnwSMc8cE68DMWTL5wW3osC8JomuNtlwPXfySwnQ25yO8VY19dQhXphFHi4C";
-
-    loadScript({
-      "client-id": userID,
-    })
-      .then((paypal) => {
-        paypal
-          .Buttons({
-            style: {
-              layout: "horizontal",
-              color: "blue",
-              shape: "pill",
-              label: "paypal",
-            },
-            createOrder(data, actions) {
-              return actions.order.create({
-                intent: "CAPTURE",
-                purchase_units: [
-                  {
-                    amount: {
-                      value: "10.50",
-                    },
-                    description: "Pago Sistema",
-                  },
-                ],
-              });
-            },
-            onApprove(data, actions) {
-              return actions.order.capture().then((details) => {
-                Swal.fire({
-                  icon: "success",
-                  title: "Pago Completado",
-                  text: `Pago realizado por ${details.payer.name.given_name}`,
-                  timer: 1500,
-                });
-                console.log("No.Orden: " + data.orderID);
-              });
-            },
-          })
-          .render(".paypalButtons");
-      })
-      .catch((error) => console.error(error));
-  };
-
   const verifyToken = async () => {
     if(token){
       fetch(url+'api/token/verify/',{
@@ -282,7 +236,6 @@ export const AuthProvider = ({ Children }) => {
     setAuthToken,
     loginUser,
     logout,
-    paypal,
     token,
     setToken,
     registerUser,
@@ -292,6 +245,8 @@ export const AuthProvider = ({ Children }) => {
     cartName,
     add_product,
     delete_product,
+    pagototal,
+    setPagototal,
   };
 
   useEffect(() => {

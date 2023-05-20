@@ -5,10 +5,14 @@ import { useContext, useEffect } from "react";
 import {FaUserAlt} from 'react-icons/fa';
 import {FiLogOut} from 'react-icons/fi';
 import {FiDelete} from "react-icons/fi"
+import { loadScript } from '@paypal/paypal-js';
 
 function Navbar() {
 
   const { logout, user, token, getCart, cart, delete_product} = useContext(AuthContext);
+
+  const userID =
+      "AVwDIRtg-Io9_mJ7wJs-HnwSMc8cE68DMWTL5wW3osC8JomuNtlwPXfySwnQ25yO8VY19dQhXphFHi4C";
 
   var user_username = "";
   user ? (user_username = user.username) : null;
@@ -22,7 +26,47 @@ function Navbar() {
 
   useEffect(()=>{
     showCart()
-  })
+    loadScript({
+      "client-id": userID,
+    })
+      .then((paypal) => {
+        paypal
+          .Buttons({
+            style: {
+              layout: "horizontal",
+              color: "blue",
+              shape: "pill",
+              label: "paypal",
+            },
+            createOrder(data, actions) {
+              return actions.order.create({
+                intent: "CAPTURE",
+                purchase_units: [
+                  {
+                    amount: {
+                      value: "10.50",
+                    },
+                    description: "Pago Sistema",
+                  },
+                ],
+              });
+            },
+            onApprove(data, actions) {
+              return actions.order.capture().then((details) => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Pago Completado",
+                  text: `Pago realizado por ${details.payer.name.given_name}`,
+                  timer: 1500,
+                });
+                console.log("No.Orden: " + data.orderID);
+              });
+            },
+          })
+          .render(".paypal-buttons");
+      })
+      .catch((error) => console.error(error));
+  },[])
 
 
   const data = cart.map((item) => (
@@ -94,10 +138,12 @@ function Navbar() {
                     </tbody>
                   </table>
                   <div className="moda-action">
+                    <div className="paypal-buttons"></div>
+                    <div className="">
                     <label htmlFor="modal-cart" className="btn text-white">
                       Salir
                     </label>
-                    <button className="btn btn-accent m-2">Q0 Pagar</button>
+                    </div>
                   </div>
                 </div>
               </div>

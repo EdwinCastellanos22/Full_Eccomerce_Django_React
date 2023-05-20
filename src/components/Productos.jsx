@@ -4,7 +4,7 @@ import AuthContext from "../Context/AuthContext";
 import { animateScroll as scroll } from "react-scroll";
 
 function Productos() {
-  const { token, url, add_product } = useContext(AuthContext);
+  const { token, url, add_product, pagototal, setPagototal } = useContext(AuthContext);
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -32,14 +32,14 @@ function Productos() {
   }),[loading];
 
   const irNext = () => {
+    scroll.scrollToTop()
     setPage(page +1)
     setLoading(true)
-    scroll.scrollToTop()
   }
   const irPrev = () => {
+    scroll.scrollToTop()
     setPage(page -1)
     setLoading(true)
-    scroll.scrollToTop()
   }
 
   const pro = data.map((item) => (
@@ -52,7 +52,7 @@ function Productos() {
         <img
           src={"https://picsum.photos/id/" + item.pid + "/300/300"}
           alt="image_product"
-          className="rounded"
+          className="rounded min-[400px]:mt-2"
         />
       </figure>
       <div className="card-body">
