@@ -179,50 +179,26 @@ export const AuthProvider = ({ Children }) => {
       .catch((error) => console.error(error));
   };
 
-  const viewToken = () => {
-    token;
-    2
-      ? Swal.fire({
-          icon: "info",
-          title: "Token JWT",
-          text: token,
-          confirmButtonText: "Listo",
-        })
-      : Swal.fire({
-          icon: "error",
-          title: "Token JWT",
-          text: "No hay token!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-  };
-
   const verifyToken = async () => {
-    const response = await fetch(url + "api/token/verify/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token: localStorage.getItem("token"),
-      }),
-    });
-    if (response.status == 200) {
-      Swal.fire({
-        icon: "success",
-        title: "Valido",
-        text: "El token es valido",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-    } else {
-      Swal.fire({
-        icon: "warning",
-        title: "No Valido",
-        text: "El token ha vencido",
-        showConfirmButton: false,
-        timer: 2000,
-      });
+    if(token){
+      fetch(url+'api/token/verify/',{
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          'token': localStorage.getItem('token')
+        })
+      })
+      .then((response) => {
+        if(response.status != 200){
+          localStorage.removeItem("token")
+          localStorage.removeItem("authTokens")
+          setUser(null)
+          setAuthToken(null)
+          setToken(null)
+        }
+      })
     }
   };
 
@@ -307,12 +283,10 @@ export const AuthProvider = ({ Children }) => {
     loginUser,
     logout,
     paypal,
-    viewToken,
     token,
     setToken,
     registerUser,
     url,
-    verifyToken,
     getCart,
     cart,
     cartName,
@@ -323,6 +297,7 @@ export const AuthProvider = ({ Children }) => {
   useEffect(() => {
     if (authToken) {
       setUser(jwtdecode(authToken.access));
+      verifyToken()
     }
     setLoading(false);
   }, [authToken, loading]);

@@ -13,7 +13,7 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col text-black bg-slate-300 max-[400px]:w-screen">
+      <div className="flex flex-col text-black bg-slate-300 max-[400px]:w-screen p-2">
         <h1 className="text-3xl font-mono font-bold animate-pulse text-center m-2">
           Django-Rest-Framework x React
         </h1>

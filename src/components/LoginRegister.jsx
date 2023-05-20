@@ -26,12 +26,6 @@ export default function LoginRegister() {
     <div className="tokens">
       {token ? (
         <>
-          <button className="btn btn-info m-2" onClick={viewToken}>
-            View Token
-          </button>
-          <button className="btn btn-accent m-2" onClick={verifyToken}>
-            Check validation token
-          </button>
         </>
       ) : (
         <>

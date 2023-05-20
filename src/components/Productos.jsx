@@ -1,6 +1,7 @@
 import React from "react";
 import { useContext, useState, useEffect } from "react";
 import AuthContext from "../Context/AuthContext";
+import { animateScroll as scroll } from "react-scroll";
 
 function Productos() {
   const { token, url, add_product } = useContext(AuthContext);
@@ -33,10 +34,12 @@ function Productos() {
   const irNext = () => {
     setPage(page +1)
     setLoading(true)
+    scroll.scrollToTop()
   }
   const irPrev = () => {
     setPage(page -1)
     setLoading(true)
+    scroll.scrollToTop()
   }
 
   const pro = data.map((item) => (
