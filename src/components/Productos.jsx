@@ -4,7 +4,7 @@ import AuthContext from "../Context/AuthContext";
 import { animateScroll as scroll } from "react-scroll";
 
 function Productos() {
-  const { token, url, add_product, pagototal, setPagototal } = useContext(AuthContext);
+  const { token, url, add_product } = useContext(AuthContext);
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ function Productos() {
         <img
           src={"https://picsum.photos/id/" + item.pid + "/300/300"}
           alt="image_product"
-          className="rounded min-[400px]:mt-2"
+          className="rounded"
         />
       </figure>
       <div className="card-body">
@@ -61,7 +61,7 @@ function Productos() {
         <div className="card-actions justify-center">
           <button
             className="btn btn-primary"
-            onClick={add_product.bind(this, item.pid)}
+            onClick={add_product.bind(this, item.pid, item.precio)}
           >
             Q{item.precio} Agregar
           </button>

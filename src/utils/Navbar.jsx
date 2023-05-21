@@ -1,15 +1,14 @@
-import React from 'react'
-import { useState } from "react";
+import React from 'react';
+import { loadScript } from '@paypal/paypal-js';
 import AuthContext from "../Context/AuthContext";
 import { useContext, useEffect } from "react";
 import {FaUserAlt} from 'react-icons/fa';
 import {FiLogOut} from 'react-icons/fi';
-import {FiDelete} from "react-icons/fi"
-import { loadScript } from '@paypal/paypal-js';
+import {FiDelete} from "react-icons/fi";
 
 function Navbar() {
 
-  const { logout, user, token, getCart, cart, delete_product} = useContext(AuthContext);
+  const { logout, user, token, getCart, cart, delete_product, pagototal } = useContext(AuthContext);
 
   const userID =
       "AVwDIRtg-Io9_mJ7wJs-HnwSMc8cE68DMWTL5wW3osC8JomuNtlwPXfySwnQ25yO8VY19dQhXphFHi4C";
@@ -25,57 +24,26 @@ function Navbar() {
 
 
   useEffect(()=>{
-    showCart()
-    loadScript({
-      "client-id": userID,
+    loadScript({"client-id":userID})
+    .then((paypal) => {
+      paypal.Buttons({
+        style:{
+          layout: "horizontal",
+          color: "white",
+          label: "paypal",
+        }
+      }).render("#paypal")
     })
-      .then((paypal) => {
-        paypal
-          .Buttons({
-            style: {
-              layout: "horizontal",
-              color: "blue",
-              shape: "pill",
-              label: "paypal",
-            },
-            createOrder(data, actions) {
-              return actions.order.create({
-                intent: "CAPTURE",
-                purchase_units: [
-                  {
-                    amount: {
-                      value: "10.50",
-                    },
-                    description: "Pago Sistema",
-                  },
-                ],
-              });
-            },
-            onApprove(data, actions) {
-              return actions.order.capture().then((details) => {
-                Swal.fire({
-                  icon: "success",
-                  title: "Pago Completado",
-                  text: `Pago realizado por ${details.payer.name.given_name}`,
-                  timer: 1500,
-                });
-                console.log("No.Orden: " + data.orderID);
-              });
-            },
-          })
-          .render(".paypal-buttons");
-      })
-      .catch((error) => console.error(error));
+    showCart()
   },[])
 
 
   const data = cart.map((item) => (
     <tr key={item.cid}>
       <td>{item.producto.nombre}</td>
-      <td>{item.producto.precio}</td>
+      <td>Q{item.producto.precio}</td>
       <td>{item.cantidad}</td>
-      <td>{item.precio_total}</td>
-      <td><FiDelete onClick={delete_product.bind(this, item.cid)}/></td>
+      <td><FiDelete onClick={delete_product.bind(this, item.cid, item.producto.precio)}/></td>
     </tr>
   ));
 
@@ -123,13 +91,14 @@ function Navbar() {
               <div className="modal">
                 <div className="modal-box w-11/12 max-w-5xl bg-slate-300 text-black">
                   <h1 className="text-2xl font-mono font-bold self-center">Mi Carrito</h1>
-                  <table className="table w-full text-white bg-black">
+                  { pagototal > 0 ? (
+                    <>
+                    <table className="table w-full text-white bg-black">
                     <thead>
                       <tr>
                         <th>Nombre</th>
                         <th>Precio</th>
                         <th>Cantidad</th>
-                        <th>Precio Total</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -137,14 +106,27 @@ function Navbar() {
                       {data}
                     </tbody>
                   </table>
-                  <div className="moda-action">
-                    <div className="paypal-buttons"></div>
+                  <div className="modal-action">
                     <div className="">
-                    <label htmlFor="modal-cart" className="btn text-white">
+                      <button className='btn btn-ghost'>Total: Q{(pagototal/1).toFixed(2)}</button>
+                    <div className="w-32 m-2" id='paypal'></div>
+                    <label htmlFor="modal-cart" className="btn text-white m-2">
                       Salir
                     </label>
                     </div>
                   </div>
+                  </>
+                  ): (
+                    <>
+                    <div className="flex justify-center items-center h-full">
+                      <h4 className="text-xl font-bold">Agrega productos a el carrito!!</h4>
+                    </div>
+                    <div className="modal-action">
+                      <label htmlFor="modal-cart" className='btn text-white'>Salir</label>
+                    </div>
+                    </>
+                  )}
+                  
                 </div>
               </div>
             </>

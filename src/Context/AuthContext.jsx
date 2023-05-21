@@ -14,7 +14,7 @@ export const AuthProvider = ({ Children }) => {
   const [cart, setCart] = useState([]);
   const [cartName, setCartName]= useState([])
 
-  const [pagototal, setPagototal]= useState(0)
+  const [pagototal, setPagototal]= useState(0);
 
   const [token, setToken] = useState(() =>
     localStorage.getItem("token")
@@ -167,13 +167,18 @@ export const AuthProvider = ({ Children }) => {
     const data = await response.json();
     if (response.status == 200) {
       await setCart(data);
+      if(pagototal == 0){
+        data.map((element) => {
+          setPagototal(pagototal + parseFloat(element.precio_total) )
+        });
+      }
     } else {
       console.log("Error");
     }
   };
 
   // Agregar Producto al Carrito
-  const add_product = async  (pid) => {
+  const add_product = async  (pid, precio) => {
     const response= await fetch(url +"api/car/", {
       method: "POST",
       headers: {
@@ -185,12 +190,15 @@ export const AuthProvider = ({ Children }) => {
       })
     });
     response.status == 201 ?
-    Swal.fire({
+    (Swal.fire({
       icon: "success",
       text: `Producto agregado!!`,
       showConfirmButton: false,
       timer: 1000,
-    })
+    }),
+    setPagototal(pagototal+ parseFloat(precio)),
+    getCart()
+    )
     : 
     Swal.fire({
       icon: "error",
@@ -201,7 +209,7 @@ export const AuthProvider = ({ Children }) => {
   };
 
   // Eliminar Producto
-  const delete_product= async(cid) =>{
+  const delete_product= async(cid, precio) =>{
     const response= await fetch(url+"api/car/", {
       method: "DELETE",
       headers: {
@@ -213,13 +221,17 @@ export const AuthProvider = ({ Children }) => {
       })
     })
     response.status == 204 ? 
-    Swal.fire({
+    (
+      Swal.fire({
       icon: "success",
       title: "Eliminado",
       text: "Se ha eliminado el producto!!",
       showConfirmButton: false,
       timer: 2000,
-    }):
+    }),
+    setPagototal(pagototal - precio),
+    getCart()
+    ):
     Swal.fire({
       icon: "error",
       title: "Error",
